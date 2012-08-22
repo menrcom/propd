@@ -1,0 +1,13 @@
+Source: propagated
+Section: admin
+Priority: extra
+Maintainer: Vasiliy G Tolstov <v.tolstov@selfip.ru>
+Build-Depends: debhelper (>= 7.0.15~), automake
+Standards-Version: 3.8.4
+Homepage: http://www.clodo.ru
+
+Package: propagated
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, iproute
+Description: propagated
+ Multicast daemon, get and set tools.

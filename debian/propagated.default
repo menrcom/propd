@@ -1,0 +1,11 @@
+IF_E=eth1
+IF_I=bond1
+
+# IP-address of network interface to listen on:
+INTERFACE_ADDR=$(ip addr show dev ${IF_E} |awk '$1 ~ /inet$/ && $2 ~ /^192\.168\.14/ { sub("/.*$","",$2); print $2; }' |head -n 1);
+
+# Multicast ip_address to send-receive data:
+MCAST_ADDR="224.0.0.1"
+
+# External IP-address to route clients data through:
+GATE_ADDR=$(ip addr show dev ${IF_I} |awk '$1 ~ /inet$/ && $2 ~ /^192\.168\.15/ { sub("/.*$","",$2); print $2; }' |head -n 1);

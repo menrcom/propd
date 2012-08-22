@@ -1,0 +1,11 @@
+propagated (0.1.1-1) stable; urgency=low
+
+  * Bugfixes.
+
+ -- Stepan G. Fedorov <sf@clodo.ru>  Wed, 25 Apr 2012 15:48:48 +0400
+
+propagated (0.1-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Vasiliy G Tolstov <v.tolstov@selfip.ru>  Fri, 01 Jul 2011 12:49:53 +0400
