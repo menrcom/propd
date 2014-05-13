@@ -26,6 +26,7 @@ struct cfg_ctx {
 	char *gwip;
 	char *localip;
 	struct pkt_buffer recv_buffer;
+	struct pkt_buffer send_buffer;
 	struct list *send_queue;
 	struct sockaddr_in maddr;
 	struct in_addr gaddr;

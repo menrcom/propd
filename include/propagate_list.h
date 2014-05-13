@@ -7,9 +7,9 @@ struct list {
 	struct list *next;
 };
 
-#define LIST_GET(addr, type, name) (type *)(addr - &(type *)0->name)
+#define LIST_GET(addr, type, name) (type *)(addr - &((type *)0)->name)
 
-struct list *list_add(struct list, struct list);
-struct list *list_del(struct list);
+struct list *list_add(struct list *, struct list *);
+struct list *list_del(struct list *);
 
 #endif

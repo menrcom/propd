@@ -2,12 +2,12 @@
 
 struct list *list_add(struct list *lh, struct list *p) {
 	if (lh) {
-		p->lh.next = lh->next;
-		p->lh.prev = lh;
-		lh->next = &p->lh;
+		p->next = lh->next;
+		p->prev = lh;
+		lh->next = &p;
 	} else {
-		p->lh.next = &p->lh;
-		p->lh.prev = &p->lh;
+		p->next = &p;
+		p->prev = &p;
 		lh = p;
 	}
 

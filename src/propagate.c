@@ -17,12 +17,12 @@ static inline struct pkt_buffer *new_buffer(struct cfg_ctx *cfg) {
 
 	if (!b) {
 		syslog(LOG_ERR,
-		       "new_buffer: Cannot allocate %d bytes of memory.",
+		       "new_buffer: Cannot allocate %l bytes of memory.",
 		       sizeof(struct pkt_buffer));
 		return NULL;
 	}
 
-	cfg->send_queue = list_add(cfg->send_queue, b);
+	cfg->send_queue = list_add(cfg->send_queue, &b->lh);
 
 	return b;
 }
@@ -73,7 +73,7 @@ static struct propagate_packet *enqueue_route(struct cfg_ctx *cfg, struct in_add
 	struct propagate_packet *p = b->data + b->packets_present;
 
 	p->type = 's';
-	p->destination = addr.s_addr;
+	p->destination = addr->s_addr;
 	p->gateway = cfg->gaddr.s_addr;
 
 	return p;
@@ -133,7 +133,7 @@ static int enqueue_routes(struct cfg_ctx *cfg) {
 }
 
 
-static int do_route_set(struct cfg_ctx cfg, char *cmd) {
+static int do_route_set(struct cfg_ctx *cfg, char *cmd) {
 
 	char ip[17], gw[17];
 	struct propagate_packet * msg = cfg->recv_buffer.data + cfg->recv_buffer.packets_processed;
@@ -181,7 +181,7 @@ static int recv_full_buffer(struct cfg_ctx *cfg) {
 	if(cfg->debug) syslog(LOG_INFO, "recv_full_buffer: Processing control FD: %d", cfg->control_fd);
 
 	struct propagate_packet *buf = cfg->recv_buffer.data + cfg->recv_buffer.packets_present;
-	ssize_t bt = btotal = 0;
+	ssize_t bt = 0, btotal = 0;
 	ssize_t bn = sizeof(struct propagate_packet)
 		* (cfg->recv_buffer.packets_total - cfg->recv_buffer.packets_present);
 
@@ -195,7 +195,6 @@ static int recv_full_buffer(struct cfg_ctx *cfg) {
 		if (bt == -1)
 			switch (errno) {
 			case EAGAIN:
-			case EWOULDBLOCK:
 				bt = 0;
 				break;
 			default:
@@ -222,7 +221,7 @@ static void process_command(struct cfg_ctx *cfg) {
 
 	case 'g': /* Get */
 		if(!cfg->passive)
-			queue_send_routes(cfg);
+			enqueue_routes(cfg);
 		break;
 
 	case 's': /* Set */
